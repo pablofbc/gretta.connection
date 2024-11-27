@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "gretta-connection",
+    "name": "gretta",
     "slug": "gretta-connection",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,6 +12,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "androidStatusBar": {
+      "backgroundColor": "#00000001",
+      "barStyle": "dark-content"
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -19,10 +23,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "gretta.connection"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "33a9bebe-6a79-4037-9d72-eb07f6c86a5a"
+      }
     }
   }
 }
