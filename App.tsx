@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Alert, Pressable, TextInput, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { comunidadApi, vrmApi, editorApi } from "./services/user";
+import { comunidadApi, vrmApi, editorApi, SystemInfo } from "./services/user";
 import React, { useState } from 'react';
 
 export default function App() {
@@ -75,6 +75,27 @@ export default function App() {
     setStr(''); // Establece `str` a una cadena vacía
   };
 
+  const systemInfo = async() => {
+    try{
+      const a: any = await SystemInfo();     
+      const dataString = JSON.stringify(a, null, 2);  // Convierte los datos a cadena de texto con formato
+      setStr(dataString); 
+      console.log('Data:', dataString);
+      Alert.alert(
+        'System Info', 
+        dataString, 
+        [
+          { text: 'OK', onPress: () => console.log('OK Pressed') }
+        ]
+      );
+    }catch (error) {
+      console.error('Error fetching data from sytem-info:', error);
+      Alert.alert('System Info', 'Error fetching data from system-info', [            
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ])
+    }   
+  };
+
   return (    
     <SafeAreaProvider style={styles.contenedor}>        
         <StatusBar style={Platform.OS=='android' ? "light": "dark"}/>
@@ -94,9 +115,11 @@ export default function App() {
           <Text style={styles.buttonText}>VRM API</Text>
           </TouchableOpacity>
         </SafeAreaView>    
-        {/* <View style={styles.area}>
-          <Text style={styles.textArea}>{str}</Text>
-        </View>  */}
+      <View style={styles.areaButton}>
+        <TouchableOpacity style={styles.buttonInfo} onPress={systemInfo}>
+        <Text style={styles.buttonText}>System Info</Text>
+        </TouchableOpacity>
+      </View> 
       <View style={styles.area}>
         <ScrollView style={styles.scrollArea}>
           <Text style={styles.textArea}>{str}</Text>
@@ -182,5 +205,13 @@ const styles = StyleSheet.create({
     //padding: 10,
     paddingTop: 25,
     paddingBottom: 1,
+  },
+  buttonInfo: {
+    backgroundColor: '#005ce6',
+    padding: 13,
+    borderRadius: 7,
+    //marginBottom: 10,
+    marginRight: 5,
+    height: 50,
   },
 });

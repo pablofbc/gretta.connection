@@ -48,3 +48,15 @@ export const vrmApi = async (username: string, password: string) => {
   }
 };
 
+export const SystemInfo = async () => {
+  try {
+    const response = await axios.get(
+      "https://cc210ecba693.sn.mynetname.net:9091/systemInfo/api/SystemInfo/system-info"
+    );
+    return response.data;
+  } catch (error) {
+    Alert.alert("No se conectó a SystemInfo");
+    throw error;
+  }
+};
+
