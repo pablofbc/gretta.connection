@@ -3,12 +3,14 @@ import { StyleSheet, Text, View, Alert, Pressable, TextInput, ScrollView, Toucha
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { comunidadApi, vrmApi, editorApi, SystemInfo } from "./services/user";
 import React, { useState } from 'react';
+import { RadioButton } from 'react-native-paper';
 
 export default function App() {
   const [str, setStr] = useState("");
+  const [selectedValue, setSelectedValue] = useState('9091');
   const comunidad = async () => {
     try {
-      const a = await comunidadApi();
+      const a = await comunidadApi(selectedValue);
       const newStr = a[0].codVersion + ' | '+ a[0].codAssignment + ' | ' + a[0].versionName;
       const dataString = JSON.stringify(a, null, 2);  // Convierte los datos a cadena de texto con formato
       setStr(dataString); 
@@ -30,7 +32,7 @@ export default function App() {
 
   const editor = async () => {
     try {
-      const a = await editorApi("AACA6001019D6","COD_MPI");
+      const a = await editorApi("AACA6001019D6","COD_MPI", selectedValue);
       //console.log('Data:', a[0]);
       const dataString = JSON.stringify(a, null, 2);  // Convierte los datos a cadena de texto con formato
       setStr(dataString); 
@@ -52,7 +54,7 @@ export default function App() {
 
   const vrm = async() =>{
     try {
-      const a: any = await vrmApi("pfadmin","password");     
+      const a: any = await vrmApi("pfadmin","password", selectedValue);     
       const dataString = JSON.stringify(a, null, 2);  // Convierte los datos a cadena de texto con formato
       setStr(dataString); 
       console.log('Data:', dataString);
@@ -77,7 +79,7 @@ export default function App() {
 
   const systemInfo = async() => {
     try{
-      const a: any = await SystemInfo();     
+      const a: any = await SystemInfo(selectedValue);     
       const dataString = JSON.stringify(a, null, 2);  // Convierte los datos a cadena de texto con formato
       setStr(dataString); 
       console.log('Data:', dataString);
@@ -94,17 +96,43 @@ export default function App() {
             {text: 'OK', onPress: () => console.log('OK Pressed')},
           ])
     }   
-  };
+  };  
 
   return (    
     <SafeAreaProvider style={styles.contenedor}>        
         <StatusBar style={Platform.OS=='android' ? "light": "dark"}/>
         <View style={styles.header}>
           <Text style={styles.title}>
-            Gretta - Connection
+            Servers Connection
           </Text>
-        </View>        
-        <SafeAreaView style={styles.container}>      
+        </View> 
+        <View>
+      {/* Add a label */}
+      <Text>Choose an option:</Text>
+      
+      {/* Create a RadioButton.Group */}
+      <RadioButton.Group
+        onValueChange={(value) => setSelectedValue(value)}
+        value={selectedValue}
+      >
+        {/* Create individual radio buttons with labels */}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <RadioButton value="9091" color="blue" />
+          <Text style={{color: "white", fontSize: 20, fontWeight: 'bold',}}>Troya</Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <RadioButton value="90" color="red" />
+          <Text style={{color: "white", fontSize: 20, fontWeight: 'bold',}}>Gretta</Text>
+        </View>
+        {/*<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <RadioButton value="option3" color="green" />
+          <Text>Option 3</Text>
+        </View>*/}
+      </RadioButton.Group>
+      {/* Display the selected value */}
+      <Text>Selected Value: {selectedValue}</Text>
+    </View>     
+        <View style={styles.container}>      
           <TouchableOpacity style={styles.button} onPress={comunidad}>
           <Text style={styles.buttonText}>Comunidad API</Text>
           </TouchableOpacity>
@@ -114,7 +142,7 @@ export default function App() {
           <TouchableOpacity  style={styles.button} onPress={vrm}>
           <Text style={styles.buttonText}>VRM API</Text>
           </TouchableOpacity>
-        </SafeAreaView>    
+        </View>    
       <View style={styles.areaButton}>
         <TouchableOpacity style={styles.buttonInfo} onPress={systemInfo}>
         <Text style={styles.buttonText}>System Info</Text>
@@ -168,7 +196,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   area: {
-    flex: 1,
+    flex: 0.9,
     backgroundColor: 'black',
     padding: 10,
   },
